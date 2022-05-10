@@ -21,6 +21,9 @@ const App = () => {
     const [text, setText] = useState(STATES.NOT_STARTED);
     const [startTime, setStartTime] = useState(600);
     const [timeLeft, setTimeLeft] = useState(startTime);
+    const [bodyText, setBodyText] = useState(taoText[0]);
+    const [isRandom, setIsRandom] = useState(true);
+    const [currTaoNumber, setCurrTaoNumber] = useState(0); // read from local files
 
     const playTimer = () => {
         console.log("play timer");
@@ -68,6 +71,15 @@ const App = () => {
     }
 
     useEffect(() => {
+        if(isRandom) {
+            let randomIndex = Math.floor(Math.random() * taoText.length);
+            setBodyText(taoText[randomIndex]);
+        }
+        else {
+            setBodyText(taoText[currTaoNumber]);
+        }
+
+
         SoundPlayer.addEventListener('FinishedPlaying', ({ success }) => {
             console.log('finished playing', success);
             setText(STATES.NOT_STARTED);
@@ -78,7 +90,7 @@ const App = () => {
 
     return (
         <>
-            <TextBox text={taoText[8]} />
+            <TextBox text={bodyText} />
 
             <Pressable style={styles.playButton} onPress={playButton}>
                 <Text style={styles.text}>{text}</Text>
