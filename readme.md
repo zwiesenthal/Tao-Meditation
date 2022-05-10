@@ -37,3 +37,8 @@ Tao Te Ching Meditation App
     5th = don't charge people or change any words, and give him credit
 
     so mainly 1 and 3
+
+## Packages
+    https://www.npmjs.com/package/react-native-sound-player
+    https://www.findsounds.com/ISAPI/search.dll?keywords=gong
+    

@@ -4,16 +4,17 @@ import SoundPlayer from 'react-native-sound-player';
 import {Text, View, StyleSheet, Pressable} from 'react-native';
 import Timer from './Timer';
 import { LogBox } from 'react-native';
-
+import taoText from './tao_text';
+import TextBox from './TextBox';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
-// const TAO_TEXT_FILE = "C:/Users/zwies/coding/projects/TaoMed/src/tao_text.txt";
 
 const STATES = {
     PLAYING: "Pause",
     PAUSED: "Resume",
     NOT_STARTED: "Play"
 }
+
 var interval = null;
 
 const App = () => {
@@ -77,6 +78,8 @@ const App = () => {
 
     return (
         <>
+            <TextBox text={taoText[8]} />
+
             <Pressable style={styles.playButton} onPress={playButton}>
                 <Text style={styles.text}>{text}</Text>
             </Pressable>
@@ -96,7 +99,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'blue',
         position: 'absolute', // halfway down the screen
         left: '50%',
-        top: '50%',
+        top: '93%',
         transform: [{translateX: -50}, {translateY: -50}],
         justifyContent: 'center',
         width: 80,
