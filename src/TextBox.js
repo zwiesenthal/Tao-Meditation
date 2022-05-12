@@ -1,5 +1,5 @@
 import React from "react";
-import {Text, View, StyleSheet} from "react-native";
+import {Text, ScrollView, StyleSheet} from "react-native";
 
 const TextBox = (props) => {
     const text = props.text;
@@ -8,9 +8,9 @@ const TextBox = (props) => {
     const firstLine = text.substring(0, newLine);
     const secondLine = text.substring(newLine + 2);
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             <Text style={styles.text}>{secondLine}</Text>
-        </ View>
+        </ScrollView>
     )
 }
 
@@ -20,7 +20,6 @@ const styles = StyleSheet.create({
         position: 'absolute', // halfway down the screen
         left: '10%',
         top: '15%',
-        justifyContent: 'center',
         width: 335,
         height: 500,
     },

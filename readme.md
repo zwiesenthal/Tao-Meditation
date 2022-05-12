@@ -1,5 +1,6 @@
 # Tao-Meditation
 Tao Te Ching Meditation App
+Names: The Daily Tao (Daily Dao)
 
 ## Main page:
     Minutes choice 3 - 60 or 0, just listen to it, or a button to check in
@@ -13,6 +14,7 @@ Tao Te Ching Meditation App
     Guided, Unguided, Semiguided (just tells you when to let go of concentration 1 min before time is up)
     Donate button
     Default Time
+    Font Size
 
 ## Future Features
     Male vs. Female Speaker Setting

@@ -15,49 +15,54 @@ const STATES = {
     NOT_STARTED: "Play"
 }
 
-var interval = null;
-
 const App = () => {
     const [text, setText] = useState(STATES.NOT_STARTED);
-    const [startTime, setStartTime] = useState(600);
+    const [startTime, setStartTime] = useState(5);
     const [timeLeft, setTimeLeft] = useState(startTime);
     const [bodyText, setBodyText] = useState(taoText[0]);
     const [isRandom, setIsRandom] = useState(true);
     const [currTaoNumber, setCurrTaoNumber] = useState(0); // read from local files
+    const [intervalId, setIntervalId] = useState(null);
+
+    var basicTime = timeLeft;
 
     const playTimer = () => {
         console.log("play timer");
-        interval = setInterval(() => {
-            if(timeLeft <= 0) {
-                clearInterval(interval);
-                setTimeLeft(0);
-                // play gong noise
-                return;
+        basicTime = timeLeft;
+        // interval that counts down timeLeft, when timeLeft reaches 0, it stops the timer
+        const intervalAI = setInterval(() => {
+            if (basicTime > 0) {
+                basicTime --;
+                setTimeLeft(basicTime);
+            } else {
+                clearInterval(intervalAI);
+                setTimeLeft(startTime);
+                setText(STATES.NOT_STARTED);
+                SoundPlayer.playSoundFile('hello', 'mp3'); // hello works but not bell, wack
             }
-            setTimeLeft((prevTime) => (prevTime - 1));
         }, 1000);
+        // SoundPlayer.loadSoundFile('bell', 'mp3');
+
+        setIntervalId(intervalAI);
     }
 
     const pauseTimer = () => {
         console.log("pause timer");
-        clearInterval(interval);
+        clearInterval(intervalId);
     }
 
     const playButton = () => {
         switch (text) {
             case STATES.NOT_STARTED:
                 setText(STATES.PLAYING);
-                SoundPlayer.playSoundFile('hello', 'mp3');
                 playTimer();
                 break;
             case STATES.PLAYING:
                 setText(STATES.PAUSED);
-                SoundPlayer.pause();
                 pauseTimer();
                 break;
             case STATES.PAUSED:
                 setText(STATES.PLAYING);
-                SoundPlayer.play();
                 playTimer();
                 break;
         }
@@ -82,9 +87,9 @@ const App = () => {
 
         SoundPlayer.addEventListener('FinishedPlaying', ({ success }) => {
             console.log('finished playing', success);
-            setText(STATES.NOT_STARTED);
-            setTimeLeft(startTime);
-            pauseTimer();
+            //setText(STATES.NOT_STARTED);
+            //setTimeLeft(startTime);
+            //pauseTimer();
           });
     }, [startTime]);
 
