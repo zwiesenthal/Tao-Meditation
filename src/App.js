@@ -1,9 +1,8 @@
-// main react native boilerplate
+import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 import React,  { useEffect, useState } from 'react';
-import SoundPlayer from 'react-native-sound-player';
-import {Text, View, StyleSheet, Pressable} from 'react-native';
+import {Text, View, StyleSheet, Pressable, LogBox} from 'react-native';
+import Sound from 'react-native-sound';
 import Timer from './Timer';
-import { LogBox } from 'react-native';
 import taoText from './tao_text';
 import TextBox from './TextBox';
 
@@ -17,14 +16,16 @@ const STATES = {
 
 const App = () => {
     const [text, setText] = useState(STATES.NOT_STARTED);
-    const [startTime, setStartTime] = useState(5);
+    const [startTime, setStartTime] = useState(600);
     const [timeLeft, setTimeLeft] = useState(startTime);
     const [bodyText, setBodyText] = useState(taoText[0]);
     const [isRandom, setIsRandom] = useState(true);
     const [currTaoNumber, setCurrTaoNumber] = useState(0); // read from local files
     const [intervalId, setIntervalId] = useState(null);
+    const [changeText, setChangeText] = useState(0);
 
     var basicTime = timeLeft;
+    useKeepAwake();
 
     const playTimer = () => {
         console.log("play timer");
@@ -38,10 +39,11 @@ const App = () => {
                 clearInterval(intervalAI);
                 setTimeLeft(startTime);
                 setText(STATES.NOT_STARTED);
-                SoundPlayer.playSoundFile('hello', 'mp3'); // hello works but not bell, wack
+                playEndSound();
+                //SoundPlayer.playSoundFile('bell', 'mp3'); // hello works but not bell, wack
             }
         }, 1000);
-        // SoundPlayer.loadSoundFile('bell', 'mp3');
+        //SoundPlayer.loadSoundFile('bell', 'mp3');
 
         setIntervalId(intervalAI);
     }
@@ -70,9 +72,29 @@ const App = () => {
         // add event listener for when sound is finished
     }
 
-    const readText = async () => {
+    const settingsButton = () => {
         //var content = await RNFS.readFile(TAO_TEXT_FILE, 'utf8');
-        console.log("read text");
+        console.log("settings button pressed");
+        //splayEndSound();
+    }
+
+    const swapText = () => {
+        setChangeText(prevText => prevText + 1);
+    }
+
+    const playEndSound = () => {
+        Sound.setCategory('Playback');
+        // raise volume
+        var sound = new Sound('medbell.mp3', Sound.MAIN_BUNDLE, (error) => {
+            if (error) {
+                console.log('failed to load the sound', error);
+            } else { // loaded successfully
+                sound.setVolume(2);
+                sound.play(() => {
+                    console.log('successfully finished playing');
+                });
+            }
+        });
     }
 
     useEffect(() => {
@@ -85,24 +107,28 @@ const App = () => {
         }
 
 
-        SoundPlayer.addEventListener('FinishedPlaying', ({ success }) => {
-            console.log('finished playing', success);
-            //setText(STATES.NOT_STARTED);
-            //setTimeLeft(startTime);
-            //pauseTimer();
-          });
-    }, [startTime]);
+        //SoundPlayer.addEventListener('FinishedPlaying', ({ success }) => {
+        //    console.log('finished playing', success);
+        //  });
+
+    }, [startTime, changeText]);
+
+    /* add later
+    <Pressable style={styles.settingsButton} onPress={settingsButton}>
+        <Text style={styles.buttonText}>{"Settings"}</Text>
+    </Pressable>*/
+
 
     return (
         <>
             <TextBox text={bodyText} />
 
             <Pressable style={styles.playButton} onPress={playButton}>
-                <Text style={styles.text}>{text}</Text>
+                <Text style={styles.buttonText}>{text}</Text>
             </Pressable>
 
-            <Pressable style={styles.settingsButton} onPress={readText}>
-                <Text style={styles.text}>{"Settings"}</Text>
+            <Pressable style={styles.settingsButton} onPress={swapText}>
+                <Text style={styles.buttonText}>{"Swap"}</Text>
             </Pressable>
 
             <Timer timeLeft={timeLeft} />
@@ -113,7 +139,7 @@ const App = () => {
 
 const styles = StyleSheet.create({
     playButton: {
-        backgroundColor: 'blue',
+        backgroundColor: '#0252a3',
         position: 'absolute', // halfway down the screen
         left: '50%',
         top: '93%',
@@ -130,16 +156,42 @@ const styles = StyleSheet.create({
         top: '10%',
         transform: [{translateX: -50}, {translateY: -50}],
         justifyContent: 'center',
-        width: 70,
-        height: 70,
-        borderRadius: 35
+        width: 60,
+        height: 60,
+        borderRadius: 30
     },
     text: {
-      fontSize: 16,
-      lineHeight: 21,
-      color: 'white',
-      textAlign: 'center',
+        fontSize: 20,
+        lineHeight: 23,
+        color: "#000",
+        textAlign: "center",
+        padding: 1,
+        margin: 1,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 1
     },
+    buttonText: {
+        fontSize: 16,
+        lineHeight: 23,
+        color: "#000",
+        textAlign: "center",
+        padding: 1,
+        margin: 1,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 1
+    }
 });
 
 export default App;

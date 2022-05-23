@@ -16,19 +16,13 @@ const TextBox = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'orange',
+        backgroundColor: '#fdad5c',
         position: 'absolute', // halfway down the screen
-        left: '10%',
+        left: '5%',
         top: '15%',
-        width: 335,
-        height: 500,
-    },
-    text2: {
-      fontSize: 16,
-      lineHeight: 21,
-      color: 'black',
-      textAlign: 'center',
-      fontSize: 20
+        width: '90%',
+        height: '70%',
+        borderRadius: 10
     },
     text: {
         fontSize: 20,
@@ -44,7 +38,9 @@ const styles = StyleSheet.create({
         },
         shadowOpacity: 0.8,
         shadowRadius: 2,
-        elevation: 1
+        elevation: 1,
+        marginTop: 15,
+        marginBottom: 15
     }
 });
 
