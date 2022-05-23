@@ -38,9 +38,20 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     text: {
-        fontSize: 28,
-        //center
-        textAlign: 'center',
+        fontSize: 20,
+        lineHeight: 23,
+        color: "#000",
+        textAlign: "center",
+        padding: 1,
+        margin: 1,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2
+        },
+        shadowOpacity: 0.8,
+        shadowRadius: 2,
+        elevation: 1
     }
 });
 
