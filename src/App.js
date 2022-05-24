@@ -1,12 +1,17 @@
 import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 import React,  { useEffect, useState } from 'react';
 import {Text, View, StyleSheet, Pressable, LogBox} from 'react-native';
+import BackgroundTimer from 'react-native-background-timer';
 import Sound from 'react-native-sound';
 import Timer from './Timer';
 import taoText from './tao_text';
 import TextBox from './TextBox';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
+
+const FileNames = {
+    "Silent-10": "10MinMedBellLouder.mp3",
+}
 
 const STATES = {
     PLAYING: "Pause",
@@ -31,12 +36,12 @@ const App = () => {
         console.log("play timer");
         basicTime = timeLeft;
         // interval that counts down timeLeft, when timeLeft reaches 0, it stops the timer
-        const intervalAI = setInterval(() => {
+        const intervalID = BackgroundTimer.setInterval(() => {
             if (basicTime > 0) {
                 basicTime --;
                 setTimeLeft(basicTime);
             } else {
-                clearInterval(intervalAI);
+                BackgroundTimer.clearInterval(intervalID);
                 setTimeLeft(startTime);
                 setText(STATES.NOT_STARTED);
                 playEndSound();
@@ -45,12 +50,12 @@ const App = () => {
         }, 1000);
         //SoundPlayer.loadSoundFile('bell', 'mp3');
 
-        setIntervalId(intervalAI);
+        setIntervalId(intervalID);
     }
 
     const pauseTimer = () => {
         console.log("pause timer");
-        clearInterval(intervalId);
+        BackgroundTimer.clearInterval(intervalId);
     }
 
     const playButton = () => {
@@ -85,7 +90,7 @@ const App = () => {
     const playEndSound = () => {
         Sound.setCategory('Playback');
         // raise volume
-        var sound = new Sound('medbell.mp3', Sound.MAIN_BUNDLE, (error) => {
+        var sound = new Sound('medbell_louder.mp3', Sound.MAIN_BUNDLE, (error) => {
             if (error) {
                 console.log('failed to load the sound', error);
             } else { // loaded successfully
