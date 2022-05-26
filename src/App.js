@@ -6,6 +6,7 @@ import Sound from 'react-native-sound';
 import Timer from './Timer';
 import taoText from './tao_text';
 import TextBox from './TextBox';
+import {getSettings, setSettings } from './Util';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
@@ -20,15 +21,24 @@ const STATES = {
     NOT_STARTED: "Play"
 }
 
+const DEFAULT_SETTINGS = {
+    "Duration": 600,
+    "Random": true,
+    "PageNumber": 0,
+    "Guided": false,
+    "FontSize": 24,
+}
+
 var sound = null;
 
 const App = () => {
+    var settings;
     const [text, setText] = useState(STATES.NOT_STARTED);
     const [startTime, setStartTime] = useState(600);
     const [timeLeft, setTimeLeft] = useState(startTime);
-    const [bodyText, setBodyText] = useState(taoText[0]);
-    const [isRandom, setIsRandom] = useState(true);
     const [currTaoNumber, setCurrTaoNumber] = useState(0); // read from local files
+    const [bodyText, setBodyText] = useState(taoText[currTaoNumber]);
+    const [isRandom, setIsRandom] = useState(true);
     const [intervalId, setIntervalId] = useState(null);
     const [changeText, setChangeText] = useState(0);
     useKeepAwake();
@@ -48,8 +58,6 @@ const App = () => {
 
         console.log("pause timer");
         sound && sound.pause();
-
-        
     }
 
     const playButton = () => {
@@ -73,7 +81,13 @@ const App = () => {
         console.log("settings button pressed");
     }
 
-    const swapText = () => {
+    // async in place, next need to use sequential and save the page number
+    const swapText = async () => {
+        DEFAULT_SETTINGS.Duration = DEFAULT_SETTINGS.Duration + 1;
+        await setSettings(DEFAULT_SETTINGS);
+        var fetchedSettings = await getSettings();
+        console.log({fetchedSettings, settings});
+        setStartTime(fetchedSettings.Duration);
         setChangeText(prevText => prevText + 1);
     }
 
@@ -102,12 +116,6 @@ const App = () => {
 
             }
         });
-
-        // set timeLeft based on sound 
-
-
-
- 
     }
 
     const resetTimer = () => {
@@ -115,6 +123,26 @@ const App = () => {
     }
 
     useEffect(() => {
+
+        const getSettingsAsync = async () => {
+            var settingsFetched = await getSettings();
+            console.log("use effect", {settingsFetched});
+            if (settingsFetched) {
+                settings = settingsFetched;
+            } else {
+                settings = DEFAULT_SETTINGS;
+            }
+            if(timeLeft == startTime)
+            {
+                setTimeLeft(settings.Duration);
+            }
+            setStartTime(settings.Duration);
+            setCurrTaoNumber(settings.PageNumber);
+            setIsRandom(settings.Random);
+        }
+
+        getSettingsAsync();
+
         if(isRandom) {
             let randomIndex = Math.floor(Math.random() * taoText.length);
             setBodyText(taoText[randomIndex]);
@@ -123,7 +151,7 @@ const App = () => {
             setBodyText(taoText[currTaoNumber]);
         }
 
-    }, [startTime, changeText]);
+    }, [startTime, changeText, isRandom]);
 
     /* add later
     <Pressable style={styles.settingsButton} onPress={settingsButton}>
