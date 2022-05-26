@@ -10,7 +10,8 @@ import TextBox from './TextBox';
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const FileNames = {
-    "Silent-10": "10MinMedBellLouder.mp3",
+    "silent-10": "silent_10.mp3",
+    "louder": "medbell_louder.mp3",
 }
 
 const STATES = {
@@ -18,6 +19,8 @@ const STATES = {
     PAUSED: "Resume",
     NOT_STARTED: "Play"
 }
+
+var sound = null;
 
 const App = () => {
     const [text, setText] = useState(STATES.NOT_STARTED);
@@ -28,34 +31,25 @@ const App = () => {
     const [currTaoNumber, setCurrTaoNumber] = useState(0); // read from local files
     const [intervalId, setIntervalId] = useState(null);
     const [changeText, setChangeText] = useState(0);
-
-    var basicTime = timeLeft;
     useKeepAwake();
 
     const playTimer = () => {
-        console.log("play timer");
-        basicTime = timeLeft;
-        // interval that counts down timeLeft, when timeLeft reaches 0, it stops the timer
-        const intervalID = BackgroundTimer.setInterval(() => {
-            if (basicTime > 0) {
-                basicTime --;
-                setTimeLeft(basicTime);
-            } else {
-                BackgroundTimer.clearInterval(intervalID);
-                setTimeLeft(startTime);
-                setText(STATES.NOT_STARTED);
-                playEndSound();
-                //SoundPlayer.playSoundFile('bell', 'mp3'); // hello works but not bell, wack
-            }
-        }, 1000);
-        //SoundPlayer.loadSoundFile('bell', 'mp3');
-
-        setIntervalId(intervalID);
+        if (sound !== null) {
+            sound.play(resetTimer);
+        } else {
+            playEndSound();
+        }
     }
 
     const pauseTimer = () => {
+        if(!sound) {
+            return;
+        }
+
         console.log("pause timer");
-        BackgroundTimer.clearInterval(intervalId);
+        sound && sound.pause();
+
+        
     }
 
     const playButton = () => {
@@ -73,14 +67,10 @@ const App = () => {
                 playTimer();
                 break;
         }
-
-        // add event listener for when sound is finished
     }
 
     const settingsButton = () => {
-        //var content = await RNFS.readFile(TAO_TEXT_FILE, 'utf8');
         console.log("settings button pressed");
-        //splayEndSound();
     }
 
     const swapText = () => {
@@ -89,17 +79,39 @@ const App = () => {
 
     const playEndSound = () => {
         Sound.setCategory('Playback');
-        // raise volume
-        var sound = new Sound('medbell_louder.mp3', Sound.MAIN_BUNDLE, (error) => {
+        sound = new Sound(FileNames['silent-10'], Sound.MAIN_BUNDLE, (error) => {
             if (error) {
                 console.log('failed to load the sound', error);
-            } else { // loaded successfully
-                sound.setVolume(2);
-                sound.play(() => {
-                    console.log('successfully finished playing');
+            } else {
+                sound.play(resetTimer);
+                
+                var interval = setInterval(() => {
+                    var duration = sound.getDuration();
+                    
+                    sound.getCurrentTime((seconds) => {
+                        if (seconds >= duration) {
+                            sound.stop();
+                            sound.release();
+                            sound = null;
+                            clearInterval(interval);
+                            console.log("sound at end");
+                        }
+                        setTimeLeft(Math.round(duration - seconds));
+                    }, 1000);
                 });
+
             }
         });
+
+        // set timeLeft based on sound 
+
+
+
+ 
+    }
+
+    const resetTimer = () => {
+        setText(STATES.NOT_STARTED);
     }
 
     useEffect(() => {
@@ -110,11 +122,6 @@ const App = () => {
         else {
             setBodyText(taoText[currTaoNumber]);
         }
-
-
-        //SoundPlayer.addEventListener('FinishedPlaying', ({ success }) => {
-        //    console.log('finished playing', success);
-        //  });
 
     }, [startTime, changeText]);
 
