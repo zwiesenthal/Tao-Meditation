@@ -44,3 +44,11 @@ Names: The Daily Tao (Daily Dao)
     https://www.npmjs.com/package/react-native-sound-player
     https://www.findsounds.com/ISAPI/search.dll?keywords=gong
     
+## Common Issues
+    Can't find audio file
+    Re run npx react-native run-android
+    Sometimes have to uninstall the app
+
+    hard to npm i a package use --legacy-peer-deps
+
+    to make it release: npx react-native run-android --variant=release
