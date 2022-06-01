@@ -1,7 +1,6 @@
 import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 import React,  { useEffect, useState } from 'react';
 import {Text, View, StyleSheet, Pressable, LogBox} from 'react-native';
-import BackgroundTimer from 'react-native-background-timer';
 import Sound from 'react-native-sound';
 import Timer from './Timer';
 import taoText from './tao_text';
@@ -23,24 +22,23 @@ const STATES = {
 
 const DEFAULT_SETTINGS = {
     "Duration": 600,
-    "Random": true,
+    "Random": false,
     "PageNumber": 0,
     "Guided": false,
     "FontSize": 24,
 }
 
 var sound = null;
+var settings;
+var interval;
 
 const App = () => {
-    var settings;
     const [text, setText] = useState(STATES.NOT_STARTED);
     const [startTime, setStartTime] = useState(600);
     const [timeLeft, setTimeLeft] = useState(startTime);
-    const [currTaoNumber, setCurrTaoNumber] = useState(0); // read from local files
-    const [bodyText, setBodyText] = useState(taoText[currTaoNumber]);
+    const [currPageNumber, setCurrPageNumber] = useState(0);
+    const [bodyText, setBodyText] = useState(taoText[currPageNumber]);
     const [isRandom, setIsRandom] = useState(true);
-    const [intervalId, setIntervalId] = useState(null);
-    const [changeText, setChangeText] = useState(0);
     useKeepAwake();
 
     const playTimer = () => {
@@ -77,18 +75,14 @@ const App = () => {
         }
     }
 
-    const settingsButton = () => {
+    const settingsButtonPressed = () => {
         console.log("settings button pressed");
     }
 
-    // async in place, next need to use sequential and save the page number
-    const swapText = async () => {
-        DEFAULT_SETTINGS.Duration = DEFAULT_SETTINGS.Duration + 1;
-        await setSettings(DEFAULT_SETTINGS);
-        var fetchedSettings = await getSettings();
-        console.log({fetchedSettings, settings});
-        setStartTime(fetchedSettings.Duration);
-        setChangeText(prevText => prevText + 1);
+    const incrementPageNumber = () => {
+        settings.PageNumber = settings.PageNumber + 1;
+        setSettings(settings);
+        console.log("increment page number", {settings});
     }
 
     const playEndSound = () => {
@@ -99,21 +93,24 @@ const App = () => {
             } else {
                 sound.play(resetTimer);
                 
-                var interval = setInterval(() => {
-                    var duration = sound.getDuration();
-                    
+                var duration = Math.floor(sound.getDuration());
+
+                interval = setInterval(() => {
                     sound.getCurrentTime((seconds) => {
+                        console.log({seconds, duration});
                         if (seconds >= duration) {
+                            if(!isRandom) 
+                            {
+                                incrementPageNumber();
+                            }
                             sound.stop();
                             sound.release();
                             sound = null;
                             clearInterval(interval);
-                            console.log("sound at end");
                         }
                         setTimeLeft(Math.round(duration - seconds));
-                    }, 1000);
-                });
-
+                    });
+                }, 1000);
             }
         });
     }
@@ -123,13 +120,13 @@ const App = () => {
     }
 
     useEffect(() => {
-
         const getSettingsAsync = async () => {
             var settingsFetched = await getSettings();
             console.log("use effect", {settingsFetched});
             if (settingsFetched) {
                 settings = settingsFetched;
             } else {
+                console.log("Using default settings");
                 settings = DEFAULT_SETTINGS;
             }
             if(timeLeft == startTime)
@@ -137,7 +134,7 @@ const App = () => {
                 setTimeLeft(settings.Duration);
             }
             setStartTime(settings.Duration);
-            setCurrTaoNumber(settings.PageNumber);
+            setCurrPageNumber(settings.PageNumber);
             setIsRandom(settings.Random);
         }
 
@@ -148,15 +145,11 @@ const App = () => {
             setBodyText(taoText[randomIndex]);
         }
         else {
-            setBodyText(taoText[currTaoNumber]);
+            setBodyText(taoText[currPageNumber]);
         }
 
-    }, [startTime, changeText, isRandom]);
+    }, [startTime, isRandom]);
 
-    /* add later
-    <Pressable style={styles.settingsButton} onPress={settingsButton}>
-        <Text style={styles.buttonText}>{"Settings"}</Text>
-    </Pressable>*/
 
 
     return (
@@ -167,8 +160,8 @@ const App = () => {
                 <Text style={styles.buttonText}>{text}</Text>
             </Pressable>
 
-            <Pressable style={styles.settingsButton} onPress={swapText}>
-                <Text style={styles.buttonText}>{"Swap"}</Text>
+            <Pressable style={styles.settingsButton} onPress={settingsButtonPressed}>
+                <Text style={styles.buttonText}>{"Settings"}</Text>
             </Pressable>
 
             <Timer timeLeft={timeLeft} />
@@ -196,8 +189,8 @@ const styles = StyleSheet.create({
         top: '10%',
         transform: [{translateX: -50}, {translateY: -50}],
         justifyContent: 'center',
-        width: 60,
-        height: 60,
+        width: 70,
+        height: 70,
         borderRadius: 30
     },
     text: {

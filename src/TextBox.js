@@ -4,9 +4,9 @@ import {Text, ScrollView, StyleSheet} from "react-native";
 const TextBox = (props) => {
     const text = props.text;
     // find 2nd new line
-    const newLine = text.indexOf("\n");
-    const firstLine = text.substring(0, newLine);
-    const secondLine = text.substring(newLine + 2);
+    // const newLine = text.indexOf("\n");
+    // const firstLine = text.substring(0, newLine);
+    const secondLine = text; // text.substring(newLine + 2);
     return (
         <ScrollView style={styles.container}>
             <Text style={styles.text}>{secondLine}</Text>
