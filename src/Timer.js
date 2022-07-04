@@ -4,10 +4,14 @@ import {Text, View, StyleSheet, Pressable} from "react-native";
 const Timer = (props) => {
 
     const toMins = (time) => {
+        if(time < 0) return 0;
+        
         return Math.floor(time / 60);
     }
 
     const toSeconds = (time) => {
+        if (time < 0) return "00";
+
         let seconds = time % 60;
         if (seconds < 10) {
             seconds = "0" + seconds;

@@ -6,12 +6,21 @@ import Timer from './Timer';
 import taoText from './tao_text';
 import TextBox from './TextBox';
 import {getSettings, setSettings } from './Util';
+import SettingsBox from './SettingsBox';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const FileNames = {
-    "silent-10": "silent_10.mp3",
-    "louder": "medbell_louder.mp3",
+    silent: {
+        "3": "silent_3.mp3",
+        "5": "silent_5.mp3",
+        "10": "silent_10.mp3",
+        "20": "silent_20.mp3",
+    },
+    guided: {
+        "10": "todo-guided-10.mp3",
+        "20": "todo-guided-20.mp3",
+    }
 }
 
 const STATES = {
@@ -32,13 +41,21 @@ var sound = null;
 var settings;
 var interval;
 
+const SILENT = "silent";
+const GUIDED = "guided";
+
+// i feel like i should have an object for the settings
+
 const App = () => {
     const [text, setText] = useState(STATES.NOT_STARTED);
-    const [startTime, setStartTime] = useState(600);
+    const [startTime, setStartTime] = useState(10*60);
     const [timeLeft, setTimeLeft] = useState(startTime);
-    const [currPageNumber, setCurrPageNumber] = useState(0);
-    const [bodyText, setBodyText] = useState(taoText[currPageNumber]);
+    const [pageNumber, setPageNumber] = useState(0);
+    const [bodyText, setBodyText] = useState(taoText[pageNumber]);
     const [isRandom, setIsRandom] = useState(true);
+    const [audioStyle, setAudioStyle] = useState(SILENT); // SILENT or GUIDED
+    const [fileName, setFileName] = useState("silent_10.mp3");
+    const [isSettingsHidden, setIsSettingsHidden] = useState(true);
     useKeepAwake();
 
     const playTimer = () => {
@@ -76,18 +93,28 @@ const App = () => {
     }
 
     const settingsButtonPressed = () => {
+        setIsSettingsHidden((prevHidden) => !prevHidden);
         console.log("settings button pressed");
     }
 
     const incrementPageNumber = () => {
         settings.PageNumber = settings.PageNumber + 1;
         setSettings(settings);
-        console.log("increment page number", {settings});
+        // setPageNumber(settings.PageNumber);
+        console.log("increment page number, new settings", {settings});
+    }
+
+    const toggleRandom = () => {
+        settings.Random = !settings.Random;
+        setSettings(settings);
+        setIsRandom((prevRandom) => !prevRandom);
+        console.log("toggle random: ", {isRandom});
     }
 
     const playEndSound = () => {
         Sound.setCategory('Playback');
-        sound = new Sound(FileNames['silent-10'], Sound.MAIN_BUNDLE, (error) => {
+        console.log("play sound:", {fileName});
+        sound = new Sound(fileName, Sound.MAIN_BUNDLE, (error) => {
             if (error) {
                 console.log('failed to load the sound', error);
             } else {
@@ -119,6 +146,19 @@ const App = () => {
         setText(STATES.NOT_STARTED);
     }
 
+    const setAudioFileFromTime = (mins) => {
+        // settingsButtonPressed(); // hide settings
+        var fileName = FileNames[audioStyle][(mins).toString()];
+        console.log("set audio file from time", {fileName, mins, audioStyle})
+        if (fileName) {
+            setFileName(fileName);
+        }
+        else {
+            console.warn("Tried to set file name to invalid value", {fileName, mins, audioStyle});
+        }
+        setTimeLeft(mins*60);
+    }
+
     useEffect(() => {
         const getSettingsAsync = async () => {
             var settingsFetched = await getSettings();
@@ -134,7 +174,7 @@ const App = () => {
                 setTimeLeft(settings.Duration);
             }
             setStartTime(settings.Duration);
-            setCurrPageNumber(settings.PageNumber);
+            setPageNumber(settings.PageNumber);
             setIsRandom(settings.Random);
         }
 
@@ -145,7 +185,7 @@ const App = () => {
             setBodyText(taoText[randomIndex]);
         }
         else {
-            setBodyText(taoText[currPageNumber]);
+            setBodyText(taoText[pageNumber]);
         }
 
     }, [startTime, isRandom]);
@@ -166,6 +206,12 @@ const App = () => {
 
             <Timer timeLeft={timeLeft} />
 
+            {   isSettingsHidden ? null 
+                : <SettingsBox
+                    toggleRandom={toggleRandom} 
+                    setAudioFileFromTime={setAudioFileFromTime}
+                />
+            }
         </>
     )
 }
@@ -191,7 +237,7 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         width: 70,
         height: 70,
-        borderRadius: 30
+        borderRadius: 30,
     },
     text: {
         fontSize: 20,
