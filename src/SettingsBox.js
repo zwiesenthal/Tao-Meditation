@@ -12,6 +12,7 @@ const SettingsBox = (props) => {
     return (
         <View style={styles.settingsBox}>
             <Text style={styles.text}>Settings</Text>
+            <Button title="1 Minutes" onPress={() => props.setAudioFileFromTime(1)}/>
             <Button title="3 Minutes" onPress={() => props.setAudioFileFromTime(3)}/>
             <Button title="5 Minutes" onPress={() => props.setAudioFileFromTime(5)}/>
             <Button title="10 Minutes" onPress={() => props.setAudioFileFromTime(10)}/>

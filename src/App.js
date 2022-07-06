@@ -12,6 +12,7 @@ LogBox.ignoreLogs(['new NativeEventEmitter']);
 
 const FileNames = {
     silent: {
+        "1": "silent_1.mp3",
         "3": "silent_3.mp3",
         "5": "silent_5.mp3",
         "10": "silent_10.mp3",
@@ -26,7 +27,8 @@ const FileNames = {
 const STATES = {
     PLAYING: "Pause",
     PAUSED: "Resume",
-    NOT_STARTED: "Play"
+    NOT_STARTED: "Play",
+    FINISHED: "Done",
 }
 
 const DEFAULT_SETTINGS = {
@@ -56,6 +58,7 @@ const App = () => {
     const [audioStyle, setAudioStyle] = useState(SILENT); // SILENT or GUIDED
     const [fileName, setFileName] = useState("silent_10.mp3");
     const [isSettingsHidden, setIsSettingsHidden] = useState(true);
+    const [resetUseEffect, setResetUseEffect] = useState(false);
     useKeepAwake();
 
     const playTimer = () => {
@@ -89,6 +92,14 @@ const App = () => {
                 setText(STATES.PLAYING);
                 playTimer();
                 break;
+            case STATES.FINISHED:
+                setText(STATES.NOT_STARTED);
+                setTimeLeft(startTime);
+                if(!isRandom) {
+                    incrementPageNumber();
+                }
+                setResetUseEffect((prev) => !prev);
+                break;
         }
     }
 
@@ -111,6 +122,14 @@ const App = () => {
         console.log("toggle random: ", {isRandom});
     }
 
+    const finishedAudio = () => {
+        setText(STATES.FINISHED);
+        sound.stop();
+        sound.release();
+        sound = null;
+        clearInterval(interval);
+    }
+
     const playEndSound = () => {
         Sound.setCategory('Playback');
         console.log("play sound:", {fileName});
@@ -125,15 +144,8 @@ const App = () => {
                 interval = setInterval(() => {
                     sound.getCurrentTime((seconds) => {
                         console.log({seconds, duration});
-                        if (seconds >= duration) {
-                            if(!isRandom) 
-                            {
-                                incrementPageNumber();
-                            }
-                            sound.stop();
-                            sound.release();
-                            sound = null;
-                            clearInterval(interval);
+                        if (seconds >= duration) { // if the sound is done playing
+                            finishedAudio();
                         }
                         setTimeLeft(Math.round(duration - seconds));
                     });
@@ -143,7 +155,7 @@ const App = () => {
     }
 
     const resetTimer = () => {
-        setText(STATES.NOT_STARTED);
+        setText(STATES.FINISHED);
     }
 
     const setAudioFileFromTime = (mins) => {
@@ -157,6 +169,8 @@ const App = () => {
             console.warn("Tried to set file name to invalid value", {fileName, mins, audioStyle});
         }
         setTimeLeft(mins*60);
+        setStartTime(mins*60);
+        setSettings({...settings, Duration: mins*60});
     }
 
     useEffect(() => {
@@ -188,7 +202,7 @@ const App = () => {
             setBodyText(taoText[pageNumber]);
         }
 
-    }, [startTime, isRandom]);
+    }, [startTime, isRandom, resetUseEffect, pageNumber]);
 
 
 
@@ -196,7 +210,7 @@ const App = () => {
         <>
             <TextBox text={bodyText} />
 
-            <Pressable style={styles.playButton} onPress={playButton}>
+            <Pressable style={[styles.playButton, styles[text]]}  onPress={playButton}>
                 <Text style={styles.buttonText}>{text}</Text>
             </Pressable>
 
@@ -270,6 +284,9 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 1
+    },
+    done: {
+        backgroundColor: '#00ff51',
     }
 });
 

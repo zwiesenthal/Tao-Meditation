@@ -52,3 +52,10 @@ Names: The Daily Tao (Daily Dao)
     hard to npm i a package use --legacy-peer-deps
 
     to make it release: npx react-native run-android --variant=release
+
+## How to run:
+    npm start
+
+    new tab
+
+    npx react-native run-android
