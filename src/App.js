@@ -1,6 +1,6 @@
 import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 import React,  { useEffect, useState } from 'react';
-import {Text, View, StyleSheet, Pressable, LogBox} from 'react-native';
+import {Text, View, StyleSheet, Pressable, LogBox, ProgressViewIOSComponent} from 'react-native';
 import Sound from 'react-native-sound';
 import Timer from './Timer';
 import taoText from './tao_text';
@@ -46,8 +46,6 @@ var interval;
 const SILENT = "silent";
 const GUIDED = "guided";
 
-// i feel like i should have an object for the settings
-
 const App = () => {
     const [text, setText] = useState(STATES.NOT_STARTED);
     const [startTime, setStartTime] = useState(10*60);
@@ -58,12 +56,13 @@ const App = () => {
     const [audioStyle, setAudioStyle] = useState(SILENT); // SILENT or GUIDED
     const [fileName, setFileName] = useState("silent_10.mp3");
     const [isSettingsHidden, setIsSettingsHidden] = useState(true);
+    const [settingsButtonText, setSettingsButtonText] = useState("Settings");
     const [resetUseEffect, setResetUseEffect] = useState(false);
     useKeepAwake();
 
     const playTimer = () => {
         if (sound !== null) {
-            sound.play(resetTimer);
+            sound.play(finishedAudio);
         } else {
             playEndSound();
         }
@@ -105,6 +104,7 @@ const App = () => {
 
     const settingsButtonPressed = () => {
         setIsSettingsHidden((prevHidden) => !prevHidden);
+        setSettingsButtonText((prevText) => prevText === "Settings" ? "Back" : "Settings");
         console.log("settings button pressed");
     }
 
@@ -124,9 +124,11 @@ const App = () => {
 
     const finishedAudio = () => {
         setText(STATES.FINISHED);
-        sound.stop();
-        sound.release();
-        sound = null;
+        if(sound) {
+            sound.stop();
+            sound.release();
+            sound = null;
+        }
         clearInterval(interval);
     }
 
@@ -137,7 +139,7 @@ const App = () => {
             if (error) {
                 console.log('failed to load the sound', error);
             } else {
-                sound.play(resetTimer);
+                sound.play(resetTimer); // maybe have this be finished audio
                 
                 var duration = Math.floor(sound.getDuration());
 
@@ -215,7 +217,7 @@ const App = () => {
             </Pressable>
 
             <Pressable style={styles.settingsButton} onPress={settingsButtonPressed}>
-                <Text style={styles.buttonText}>{"Settings"}</Text>
+                <Text style={styles.buttonText}>{settingsButtonText}</Text>
             </Pressable>
 
             <Timer timeLeft={timeLeft} />
@@ -224,6 +226,8 @@ const App = () => {
                 : <SettingsBox
                     toggleRandom={toggleRandom} 
                     setAudioFileFromTime={setAudioFileFromTime}
+                    startTime={startTime}
+                    isRandom={isRandom}
                 />
             }
         </>

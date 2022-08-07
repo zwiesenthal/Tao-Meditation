@@ -59,3 +59,15 @@ Names: The Daily Tao (Daily Dao)
     new tab
 
     npx react-native run-android
+
+## To Make Release APK
+    in android/app/build.gradle change versionCode to a higher int
+                            and versionName to a higher string
+    cd android
+    ./gradlew assembleRelease
+    ./gradlew bundleRelease
+
+    https://play.google.com/console/u/0/developers/8771764714057627355/app/4973092038499727106/tracks/4697312108177620548/releases/2/prepare
+
+    C:\Users\zwies\coding\projects\TaoMed\android\app\build\outputs\bundle\release\app-release.aab
+    
