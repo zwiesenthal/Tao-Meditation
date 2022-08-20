@@ -73,7 +73,7 @@ const styles = StyleSheet.create({
         left: '5%',
         top: '15%',
         width: '90%',
-        height: '82%',
+        height: '84%',
         borderRadius: 10
     },
     text: {

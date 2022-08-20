@@ -223,7 +223,7 @@ const App = () => {
 
 
     return (
-        <>
+        <View style={styles.background}>
             <TextBox text={bodyText} />
 
             <Pressable style={[styles.playButton, styles[text]]}  onPress={playButton}>
@@ -245,7 +245,7 @@ const App = () => {
                     clearTimer={clearTimer}
                 />
             }
-        </>
+        </View>
     )
 }
 
@@ -271,6 +271,10 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 30,
+    },
+    background: {
+        flex: 1,
+        backgroundColor: '#242424',
     },
     text: {
         fontSize: 20,
