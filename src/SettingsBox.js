@@ -1,5 +1,5 @@
-import React, { startTransition, useState } from "react";
-import {Text, View, StyleSheet, Button, TouchableHighlight} from "react-native";
+import React, { useState } from "react";
+import {Text, StyleSheet, TouchableHighlight, SafeAreaView} from "react-native";
 
 // button for set time - from 1 to 30 minutes
 // button for set font size - from 12 to 36
@@ -32,7 +32,7 @@ const SettingsBox = (props) => {
     
     // get props methods
     return (
-        <View style={styles.settingsBox}>
+        <SafeAreaView style={styles.settingsBox}>
             {durations.map(duration => (
                 <TouchableHighlight
                     style={[styles.button, (activeDuration===duration)?styles.active:null]}
@@ -62,7 +62,7 @@ const SettingsBox = (props) => {
                     Clear
                 </Text>
             </TouchableHighlight>
-        </View>            
+        </SafeAreaView>            
     )
 }
 

@@ -1,6 +1,6 @@
 import { useKeepAwake } from '@sayem314/react-native-keep-awake';
 import React,  { useEffect, useState } from 'react';
-import {Text, View, StyleSheet, Pressable, LogBox, ProgressViewIOSComponent} from 'react-native';
+import {Text, SafeAreaView, StyleSheet, Pressable, LogBox} from 'react-native';
 import Sound from 'react-native-sound';
 import Timer from './Timer';
 import taoText from './tao_text';
@@ -223,8 +223,8 @@ const App = () => {
 
 
     return (
-        <View style={styles.background}>
-            <TextBox text={bodyText} />
+        <SafeAreaView style={styles.background}>
+            <TextBox text={bodyText} onSwipe/>
 
             <Pressable style={[styles.playButton, styles[text]]}  onPress={playButton}>
                 <Text style={styles.buttonText}>{text}</Text>
@@ -245,7 +245,7 @@ const App = () => {
                     clearTimer={clearTimer}
                 />
             }
-        </View>
+        </SafeAreaView>
     )
 }
 
