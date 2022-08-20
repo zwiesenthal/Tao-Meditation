@@ -53,6 +53,15 @@ const SettingsBox = (props) => {
                     {props.isRandom ? "Random" : "Sequential"}
                 </Text>
             </TouchableHighlight>
+
+            <TouchableHighlight
+                style={[styles.button, styles.right, styles.clearTimerButton]}
+                onPress={props.clearTimer}
+            >
+                <Text style={styles.text}>
+                    Clear
+                </Text>
+            </TouchableHighlight>
         </View>            
     )
 }
@@ -85,6 +94,10 @@ const styles = StyleSheet.create({
         left: '5%',
         borderRadius: 10,
         marginTop: 10
+    },
+    clearTimerButton: {
+        top: '25%',
+        backgroundColor: "purple"
     },
     active: {
         opacity: 1

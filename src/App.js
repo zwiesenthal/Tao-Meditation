@@ -60,11 +60,12 @@ const App = () => {
     const [resetUseEffect, setResetUseEffect] = useState(false);
     useKeepAwake();
 
-    const playTimer = () => {
+    const playTimer = () => { // should probably just do playTrack
+        console.log('playTimer()', {timeLeft, fileName});
         if (sound !== null) {
             sound.play(finishedAudio);
         } else {
-            playEndSound();
+            playTrack();
         }
     }
 
@@ -111,7 +112,6 @@ const App = () => {
     const incrementPageNumber = () => {
         settings.PageNumber = settings.PageNumber + 1;
         setSettings(settings);
-        // setPageNumber(settings.PageNumber);
         console.log("increment page number, new settings", {settings});
     }
 
@@ -131,10 +131,21 @@ const App = () => {
         }
         clearInterval(interval);
     }
+    
+    const clearTimer = () => {
+        setText(STATES.NOT_STARTED);
+        if(sound) {
+            sound.stop();
+            sound.release();
+            sound = null;
+        }
+        clearInterval(interval);
+        setTimeLeft(startTime);
+    }
 
-    const playEndSound = () => {
+    const playTrack = () => {
         Sound.setCategory('Playback');
-        console.log("play sound:", {fileName});
+        console.log("playTrack():", {fileName});
         sound = new Sound(fileName, Sound.MAIN_BUNDLE, (error) => {
             if (error) {
                 console.log('failed to load the sound', error);
@@ -145,7 +156,6 @@ const App = () => {
 
                 interval = setInterval(() => {
                     sound.getCurrentTime((seconds) => {
-                        console.log({seconds, duration});
                         if (seconds >= duration) { // if the sound is done playing
                             finishedAudio();
                         }
@@ -185,13 +195,17 @@ const App = () => {
                 console.log("Using default settings");
                 settings = DEFAULT_SETTINGS;
             }
-            if(timeLeft == startTime)
+            setStartTime(settings.Duration);
+            if(timeLeft % 60 === 0)
             {
                 setTimeLeft(settings.Duration);
             }
-            setStartTime(settings.Duration);
             setPageNumber(settings.PageNumber);
             setIsRandom(settings.Random);
+            var newFileName = FileNames[audioStyle][(timeLeft / 60).toString()];
+            if (newFileName) {
+                setFileName(newFileName);
+            }
         }
 
         getSettingsAsync();
@@ -228,6 +242,7 @@ const App = () => {
                     setAudioFileFromTime={setAudioFileFromTime}
                     startTime={startTime}
                     isRandom={isRandom}
+                    clearTimer={clearTimer}
                 />
             }
         </>
