@@ -7,6 +7,7 @@ import taoText from './tao_text';
 import TextBox from './TextBox';
 import {getSettings, setSettings } from './Util';
 import SettingsBox from './SettingsBox';
+import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
@@ -224,7 +225,7 @@ const App = () => {
 
     return (
         <SafeAreaView style={styles.background}>
-            <TextBox text={bodyText} onSwipe/>
+            <TextBox text={bodyText}/>
 
             <Pressable style={[styles.playButton, styles[text]]}  onPress={playButton}>
                 <Text style={styles.buttonText}>{text}</Text>
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
         borderRadius: 40
     },
     settingsButton: {
-        backgroundColor: 'green',
+        backgroundColor: '#00A940',
         position: 'absolute', // halfway down the screen
         left: '90%',
         top: '10%',

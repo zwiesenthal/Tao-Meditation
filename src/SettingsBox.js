@@ -68,10 +68,11 @@ const SettingsBox = (props) => {
 
 const styles = StyleSheet.create({
     settingsBox: {
-        backgroundColor: 'gray',
+        backgroundColor: '#242424',
+        opacity: 1,
         position: 'absolute', // halfway down the screen
         left: '5%',
-        top: '15%',
+        top: '25%',
         width: '90%',
         height: '84%',
         borderRadius: 10
@@ -89,24 +90,24 @@ const styles = StyleSheet.create({
     },
     button: {
         opacity: 0.55,
-        backgroundColor: '#050505',
+        backgroundColor: '#A94000',
         width: '35%',
         left: '5%',
         borderRadius: 10,
         marginTop: 10
     },
     clearTimerButton: {
-        top: '25%',
-        backgroundColor: "purple"
+        top: '7.75%'
     },
     active: {
         opacity: 1
     },
     right: {
-        position: 'absolute', 
+        position: 'absolute',
+        width: '35%',
         marginTop: 10,
         left: '60%',
-        backgroundColor: '#2b72e3',
+        backgroundColor: '#4000A9',
         opacity: 1
     }
 });
