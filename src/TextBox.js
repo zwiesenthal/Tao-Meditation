@@ -16,7 +16,7 @@ const TextBox = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fdad5c',
+        backgroundColor: '#242424',
         position: 'absolute', // halfway down the screen
         left: '5%',
         top: '15%',
@@ -27,7 +27,7 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         lineHeight: 23,
-        color: "#000",
+        color: "#FEFBEA",
         textAlign: "center",
         padding: 1,
         margin: 1,

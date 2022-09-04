@@ -7,9 +7,49 @@ import taoText from './tao_text';
 import TextBox from './TextBox';
 import {getSettings, setSettings } from './Util';
 import SettingsBox from './SettingsBox';
+import Icon from 'react-native-vector-icons/FontAwesome'; // try icons/FontAwesome5 or icons/Feather or icons/MaterialCommunityIcons maybe AS
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
+
+const BACKGROUND_COLOR = "#242424";
+const SOFT_GREEN = "#00DA80";
+
+const styles = StyleSheet.create({
+    playButton: {
+        borderColor: SOFT_GREEN,
+        borderWidth: 5,
+        position: 'absolute', // halfway down the screen
+        left: '50%',
+        top: '93%',
+        transform: [{translateX: -50}, {translateY: -50}],
+        justifyContent: 'center',
+        width: 80,
+        height: 80,
+        borderRadius: 40
+    },
+    settingsButton: {
+        position: 'absolute', // halfway down the screen
+        left: '95%',
+        top: '8%',
+        transform: [{translateX: -50}, {translateY: -50}],
+        justifyContent: 'center',
+        width: 70,
+        height: 70,
+        borderRadius: 30,
+    },
+    background: {
+        flex: 1,
+        backgroundColor: BACKGROUND_COLOR,
+    },
+    playIcon: {
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    playIconLeft: {
+        left: 5,
+    }
+});
 
 const FileNames = {
     silent: {
@@ -30,6 +70,13 @@ const STATES = {
     PAUSED: "Resume",
     NOT_STARTED: "Play",
     FINISHED: "Done",
+}
+
+const PlayButton = {
+    Pause: <Icon color={SOFT_GREEN} size={40} name="pause" />,
+    Resume: <Icon style={styles.playIconLeft} color={SOFT_GREEN} size={40} name="play" />,
+    Done: <Icon name="check" color={SOFT_GREEN} size={40} />,
+    Play: <Icon style={styles.playIconLeft} color={SOFT_GREEN} size={40} name="play" />
 }
 
 const DEFAULT_SETTINGS = {
@@ -228,11 +275,15 @@ const App = () => {
             <TextBox text={bodyText}/>
 
             <Pressable style={[styles.playButton, styles[text]]}  onPress={playButton}>
-                <Text style={styles.buttonText}>{text}</Text>
+                <SafeAreaView style={styles.playIcon}>
+                    { PlayButton[text] }
+                </SafeAreaView>
             </Pressable>
 
             <Pressable style={styles.settingsButton} onPress={settingsButtonPressed}>
-                <Text style={styles.buttonText}>{settingsButtonText}</Text>
+                { !isSettingsHidden ? <Icon color="#FEFBEA" name="arrow-circle-left" size={50}/>
+                : <Icon type="material" color="#FEFBEA" name="gear" size={50} />
+                }
             </Pressable>
 
             <Timer timeLeft={timeLeft} />
@@ -249,69 +300,5 @@ const App = () => {
         </SafeAreaView>
     )
 }
-
-const styles = StyleSheet.create({
-    playButton: {
-        backgroundColor: '#0252a3',
-        position: 'absolute', // halfway down the screen
-        left: '50%',
-        top: '93%',
-        transform: [{translateX: -50}, {translateY: -50}],
-        justifyContent: 'center',
-        width: 80,
-        height: 80,
-        borderRadius: 40
-    },
-    settingsButton: {
-        backgroundColor: '#00A940',
-        position: 'absolute', // halfway down the screen
-        left: '90%',
-        top: '10%',
-        transform: [{translateX: -50}, {translateY: -50}],
-        justifyContent: 'center',
-        width: 70,
-        height: 70,
-        borderRadius: 30,
-    },
-    background: {
-        flex: 1,
-        backgroundColor: '#242424',
-    },
-    text: {
-        fontSize: 20,
-        lineHeight: 23,
-        color: "#000",
-        textAlign: "center",
-        padding: 1,
-        margin: 1,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 1
-    },
-    buttonText: {
-        fontSize: 16,
-        lineHeight: 23,
-        color: "#000",
-        textAlign: "center",
-        padding: 1,
-        margin: 1,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 1
-    },
-    done: {
-        backgroundColor: '#00ff51',
-    }
-});
 
 export default App;

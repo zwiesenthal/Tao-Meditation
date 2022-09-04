@@ -33,35 +33,37 @@ const SettingsBox = (props) => {
     // get props methods
     return (
         <SafeAreaView style={styles.settingsBox}>
-            {durations.map(duration => (
+            <SafeAreaView style={styles.settingsLower}>
+                {durations.map(duration => (
+                    <TouchableHighlight
+                        style={[styles.button, (activeDuration===duration)?styles.active:null]}
+                        key={duration}
+                        onPress={() => clickedTime(duration)}
+                    >
+                        <Text style={styles.text}>
+                            {duration + " minute" + (duration === 1 ? "" : "s")}
+                        </Text>
+                    </TouchableHighlight>
+                ))}
+
                 <TouchableHighlight
-                    style={[styles.button, (activeDuration===duration)?styles.active:null]}
-                    key={duration}
-                    onPress={() => clickedTime(duration)}
+                    style={[styles.button, styles.right]}
+                    onPress={props.toggleRandom}
                 >
                     <Text style={styles.text}>
-                        {duration + " minute" + (duration === 1 ? "" : "s")}
+                        {props.isRandom ? "Random" : "Sequential"}
                     </Text>
                 </TouchableHighlight>
-            ))}
 
-            <TouchableHighlight
-                style={[styles.button, styles.right]}
-                onPress={props.toggleRandom}
-            >
-                <Text style={styles.text}>
-                    {props.isRandom ? "Random" : "Sequential"}
-                </Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-                style={[styles.button, styles.right, styles.clearTimerButton]}
-                onPress={props.clearTimer}
-            >
-                <Text style={styles.text}>
-                    Clear
-                </Text>
-            </TouchableHighlight>
+                <TouchableHighlight
+                    style={[styles.button, styles.right, styles.clearTimerButton]}
+                    onPress={props.clearTimer}
+                >
+                    <Text style={styles.text}>
+                        Clear
+                    </Text>
+                </TouchableHighlight>
+            </SafeAreaView>            
         </SafeAreaView>            
     )
 }
@@ -72,15 +74,18 @@ const styles = StyleSheet.create({
         opacity: 1,
         position: 'absolute', // halfway down the screen
         left: '5%',
-        top: '25%',
+        top: '15%',
         width: '90%',
         height: '84%',
         borderRadius: 10
     },
+    settingsLower: {
+        top: '15%',
+    },
     text: {
-        fontSize: 18,
+        fontSize: 20,
         lineHeight: 18,
-        color: "white",
+        color: "#FEFBEA",
         textAlign: "center",
         padding: 1,
         margin: 2,
@@ -97,7 +102,7 @@ const styles = StyleSheet.create({
         marginTop: 10
     },
     clearTimerButton: {
-        top: '7.75%'
+        top: '20%'
     },
     active: {
         opacity: 1
@@ -107,7 +112,7 @@ const styles = StyleSheet.create({
         width: '35%',
         marginTop: 10,
         left: '60%',
-        backgroundColor: '#4000A9',
+        backgroundColor: '#009FE3',
         opacity: 1
     }
 });
