@@ -1,5 +1,6 @@
 import React from "react";
-import {Text, View, StyleSheet, Pressable} from "react-native";
+import {Text, View, StyleSheet} from "react-native";
+import { colors } from './Colors';
 
 const Timer = (props) => {
 
@@ -31,8 +32,8 @@ const Timer = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'cyan',
-        position: 'absolute', // halfway down the screen
+        backgroundColor: colors.CREAM_GREEN,
+        position: 'absolute',
         left: '65%',
         top: '89%',
         justifyContent: 'center',
@@ -44,15 +45,10 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         lineHeight: 23,
-        color: "#000",
+        color: colors.BLACK,
         textAlign: "center",
         padding: 1,
         margin: 1,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
         shadowOpacity: 0.8,
         shadowRadius: 2,
         elevation: 1

@@ -9,15 +9,13 @@ import {getSettings, setSettings } from './Util';
 import SettingsBox from './SettingsBox';
 import Icon from 'react-native-vector-icons/FontAwesome'; // try icons/FontAwesome5 or icons/Feather or icons/MaterialCommunityIcons maybe AS
 import Swipeable from 'react-native-gesture-handler/Swipeable';
+import { colors } from './Colors';
 
 LogBox.ignoreLogs(['new NativeEventEmitter']);
 
-const BACKGROUND_COLOR = "#242424";
-const SOFT_GREEN = "#00DA80";
-
 const styles = StyleSheet.create({
     playButton: {
-        borderColor: SOFT_GREEN,
+        borderColor: colors.GREEN,
         borderWidth: 5,
         position: 'absolute', // halfway down the screen
         left: '50%',
@@ -40,7 +38,7 @@ const styles = StyleSheet.create({
     },
     background: {
         flex: 1,
-        backgroundColor: BACKGROUND_COLOR,
+        backgroundColor: colors.BACKGROUND_COLOR,
     },
     playIcon: {
         justifyContent: 'center',
@@ -73,10 +71,10 @@ const STATES = {
 }
 
 const PlayButton = {
-    Pause: <Icon color={SOFT_GREEN} size={40} name="pause" />,
-    Resume: <Icon style={styles.playIconLeft} color={SOFT_GREEN} size={40} name="play" />,
-    Done: <Icon name="check" color={SOFT_GREEN} size={40} />,
-    Play: <Icon style={styles.playIconLeft} color={SOFT_GREEN} size={40} name="play" />
+    Pause: <Icon color={colors.GREEN} size={40} name="pause" />,
+    Resume: <Icon style={styles.playIconLeft} color={colors.GREEN} size={40} name="play" />,
+    Done: <Icon name="check" color={colors.GREEN} size={40} />,
+    Play: <Icon style={styles.playIconLeft} color={colors.GREEN} size={40} name="play" />
 }
 
 const DEFAULT_SETTINGS = {
@@ -281,8 +279,8 @@ const App = () => {
             </Pressable>
 
             <Pressable style={styles.settingsButton} onPress={settingsButtonPressed}>
-                { !isSettingsHidden ? <Icon color="#FEFBEA" name="arrow-circle-left" size={50}/>
-                : <Icon type="material" color="#FEFBEA" name="gear" size={50} />
+                { !isSettingsHidden ? <Icon color={colors.GREEN} name="arrow-circle-left" size={50}/>
+                : <Icon type="material" color={colors.GREEN} name="gear" size={50} />
                 }
             </Pressable>
 
