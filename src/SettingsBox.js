@@ -1,9 +1,7 @@
 import React, { useState } from "react";
 import {Text, StyleSheet, TouchableHighlight, SafeAreaView} from "react-native";
-
-// button for set time - from 1 to 30 minutes
+import { colors } from './Colors';
 // button for set font size - from 12 to 36
-// button for set random or not
 
 const durations = [1, 3, 5, 10, 20];
 
@@ -33,53 +31,59 @@ const SettingsBox = (props) => {
     // get props methods
     return (
         <SafeAreaView style={styles.settingsBox}>
-            {durations.map(duration => (
+            <SafeAreaView style={styles.settingsLower}>
+                {durations.map(duration => (
+                    <TouchableHighlight
+                        style={[styles.button, (activeDuration===duration)?styles.active:null]}
+                        key={duration}
+                        onPress={() => clickedTime(duration)}
+                    >
+                        <Text style={styles.text}>
+                            {duration + " minute" + (duration === 1 ? "" : "s")}
+                        </Text>
+                    </TouchableHighlight>
+                ))}
+
                 <TouchableHighlight
-                    style={[styles.button, (activeDuration===duration)?styles.active:null]}
-                    key={duration}
-                    onPress={() => clickedTime(duration)}
+                    style={[styles.button, styles.right, props.isRandom ? styles.random : null]}
+                    onPress={props.toggleRandom}
                 >
                     <Text style={styles.text}>
-                        {duration + " minute" + (duration === 1 ? "" : "s")}
+                        {props.isRandom ? "Random" : "Sequential"}
                     </Text>
                 </TouchableHighlight>
-            ))}
 
-            <TouchableHighlight
-                style={[styles.button, styles.right]}
-                onPress={props.toggleRandom}
-            >
-                <Text style={styles.text}>
-                    {props.isRandom ? "Random" : "Sequential"}
-                </Text>
-            </TouchableHighlight>
-
-            <TouchableHighlight
-                style={[styles.button, styles.right, styles.clearTimerButton]}
-                onPress={props.clearTimer}
-            >
-                <Text style={styles.text}>
-                    Clear
-                </Text>
-            </TouchableHighlight>
+                <TouchableHighlight
+                    style={[styles.button, styles.right, styles.clearTimerButton]}
+                    onPress={props.clearTimer}
+                >
+                    <Text style={styles.text}>
+                        Reset
+                    </Text>
+                </TouchableHighlight>
+            </SafeAreaView>            
         </SafeAreaView>            
     )
 }
 
 const styles = StyleSheet.create({
     settingsBox: {
-        backgroundColor: 'gray',
-        position: 'absolute', // halfway down the screen
+        backgroundColor: colors.BACKGROUND_COLOR,
+        opacity: 1,
+        position: 'absolute',
         left: '5%',
         top: '15%',
         width: '90%',
         height: '84%',
         borderRadius: 10
     },
+    settingsLower: {
+        top: '15%',
+    },
     text: {
-        fontSize: 18,
+        fontSize: 20,
         lineHeight: 18,
-        color: "white",
+        color: colors.BLACK,
         textAlign: "center",
         padding: 1,
         margin: 2,
@@ -89,25 +93,28 @@ const styles = StyleSheet.create({
     },
     button: {
         opacity: 0.55,
-        backgroundColor: '#050505',
+        backgroundColor: colors.BROWN,
         width: '35%',
         left: '5%',
         borderRadius: 10,
-        marginTop: 10
+        marginTop: 15
     },
     clearTimerButton: {
-        top: '25%',
-        backgroundColor: "purple"
+        top: '20%'
     },
     active: {
         opacity: 1
     },
     right: {
-        position: 'absolute', 
-        marginTop: 10,
+        position: 'absolute',
+        width: '35%',
+        marginTop: 15,
         left: '60%',
-        backgroundColor: '#2b72e3',
+        backgroundColor: colors.CREAM_GREEN,
         opacity: 1
+    },
+    random: {
+        backgroundColor: colors.MAGENTA
     }
 });
 

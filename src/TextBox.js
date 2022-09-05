@@ -1,5 +1,6 @@
 import React from "react";
 import {Text, ScrollView, StyleSheet} from "react-native";
+import { colors } from './Colors';
 
 const TextBox = (props) => {
     const text = props.text;
@@ -16,7 +17,6 @@ const TextBox = (props) => {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fdad5c',
         position: 'absolute', // halfway down the screen
         left: '5%',
         top: '15%',
@@ -27,11 +27,11 @@ const styles = StyleSheet.create({
     text: {
         fontSize: 20,
         lineHeight: 23,
-        color: "#000",
+        color: colors.TEXT_WHITE,
         textAlign: "center",
         padding: 1,
         margin: 1,
-        shadowColor: "#000",
+        shadowColor: colors.BLACK,
         shadowOffset: {
             width: 0,
             height: 2
