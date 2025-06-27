@@ -18,29 +18,17 @@ const TextBox = (props) => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute', // halfway down the screen
-        left: '5%',
-        top: '15%',
-        width: '90%',
-        height: '70%',
+        //left: '5%',
+        top: '12%',
+        width: '100%',
+        height: '73%',
         borderRadius: 10
     },
     text: {
-        fontSize: 20,
-        lineHeight: 23,
+        fontSize: 24,
         color: colors.TEXT_WHITE,
         textAlign: "center",
-        padding: 1,
-        margin: 1,
-        shadowColor: colors.BLACK,
-        shadowOffset: {
-            width: 0,
-            height: 2
-        },
-        shadowOpacity: 0.8,
-        shadowRadius: 2,
-        elevation: 1,
-        marginTop: 15,
-        marginBottom: 15
+        padding: 30,
     }
 });
 

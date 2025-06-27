@@ -54,6 +54,15 @@ const SettingsBox = (props) => {
                 </TouchableHighlight>
 
                 <TouchableHighlight
+                    style={[styles.button, styles.right, styles.darkMode]}
+                    onPress={props.toggleDarkMode}
+                >
+                    <Text style={styles.text}>
+                        {props.darkMode ? "Dark Mode" : "Light Mode"}
+                    </Text>
+                </TouchableHighlight>
+
+                <TouchableHighlight
                     style={[styles.button, styles.right, styles.clearTimerButton]}
                     onPress={props.clearTimer}
                 >
@@ -72,13 +81,13 @@ const styles = StyleSheet.create({
         opacity: 1,
         position: 'absolute',
         left: '5%',
-        top: '15%',
+        top: '10%',
         width: '90%',
-        height: '84%',
+        height: '90%',
         borderRadius: 10
     },
     settingsLower: {
-        top: '15%',
+        top: '25%',
     },
     text: {
         fontSize: 20,
@@ -112,6 +121,9 @@ const styles = StyleSheet.create({
         left: '60%',
         backgroundColor: colors.CREAM_GREEN,
         opacity: 1
+    },
+    darkMode: {
+        top: '40%'
     },
     random: {
         backgroundColor: colors.MAGENTA

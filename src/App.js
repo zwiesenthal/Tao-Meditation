@@ -83,6 +83,7 @@ const DEFAULT_SETTINGS = {
     "PageNumber": 0,
     "Guided": false,
     "FontSize": 24,
+    "DarkMode": true,
 }
 
 var sound = null;
@@ -102,6 +103,7 @@ const App = () => {
     const [audioStyle, setAudioStyle] = useState(SILENT); // SILENT or GUIDED
     const [fileName, setFileName] = useState("silent_10.mp3");
     const [isSettingsHidden, setIsSettingsHidden] = useState(true);
+    const [darkMode, setDarkMode] = useState(true);
     const [settingsButtonText, setSettingsButtonText] = useState("Settings");
     const [resetUseEffect, setResetUseEffect] = useState(false);
     useKeepAwake();
@@ -166,6 +168,19 @@ const App = () => {
         setSettings(settings);
         setIsRandom((prevRandom) => !prevRandom);
         console.log("toggle random: ", {isRandom});
+    }
+
+    const toggleDarkMode = () => {
+        settings.DarkMode = !settings.DarkMode;
+
+        var tempBackground = colors.BACKGROUND_COLOR;
+        colors.BACKGROUND_COLOR = colors.TEXT_WHITE;
+        colors.TEXT_WHITE = tempBackground;
+
+        console.log("toggle dark mode: ", {colors});
+
+        setSettings(settings);
+        setDarkMode((prevDarkMode) => !prevDarkMode);
     }
 
     const finishedAudio = () => {
@@ -238,7 +253,6 @@ const App = () => {
             if (settingsFetched) {
                 settings = settingsFetched;
             } else {
-                console.log("Using default settings");
                 settings = DEFAULT_SETTINGS;
             }
             setStartTime(settings.Duration);
@@ -252,6 +266,7 @@ const App = () => {
             if (newFileName) {
                 setFileName(newFileName);
             }
+            setDarkMode(settings.DarkMode);
         }
 
         getSettingsAsync();
@@ -292,7 +307,9 @@ const App = () => {
                     setAudioFileFromTime={setAudioFileFromTime}
                     startTime={startTime}
                     isRandom={isRandom}
+                    darkMode={darkMode}
                     clearTimer={clearTimer}
+                    toggleDarkMode={toggleDarkMode}
                 />
             }
         </SafeAreaView>

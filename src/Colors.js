@@ -1,4 +1,4 @@
-export const colors = {
+export var colors = {
     BACKGROUND_COLOR: "#242424",
     TEXT_WHITE: "#FEFBEA",
     CREAM_GREEN: "#caecdc",
@@ -6,5 +6,5 @@ export const colors = {
     MAGENTA: "#b4296c",
     GREEN: "#2ab472",
     PURPLE: "#7129b4",
-    BLACK: "#000",
+    BLACK: "#242424",
 };
