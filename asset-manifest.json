@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/taomed/web/static/css/main.5c376acf.css",
+    "main.js": "/taomed/web/static/js/main.aa2a63d9.js",
+    "static/js/453.b2c65378.chunk.js": "/taomed/web/static/js/453.b2c65378.chunk.js",
+    "index.html": "/taomed/web/index.html",
+    "main.5c376acf.css.map": "/taomed/web/static/css/main.5c376acf.css.map",
+    "main.aa2a63d9.js.map": "/taomed/web/static/js/main.aa2a63d9.js.map",
+    "453.b2c65378.chunk.js.map": "/taomed/web/static/js/453.b2c65378.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.5c376acf.css",
+    "static/js/main.aa2a63d9.js"
+  ]
+}
