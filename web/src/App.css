@@ -1,0 +1,178 @@
+
+:root {
+  --bg-color: #121212;
+  --text-color: #e0e0e0;
+  --hover-overlay-color: rgba(255, 255, 255, 0.05);
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-family: 'Georgia', serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+  height: 100vh; /* Ensure root takes full viewport height */
+  display: flex;
+  flex-direction: column;
+}
+
+nav {
+  margin-bottom: 20px; /* Reduced margin for tighter integration */
+  padding-top: 5vh; /* Padding at the very top of the page */
+}
+
+nav ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+}
+
+nav li {
+  display: inline;
+  margin: 0 20px;
+}
+
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.2em;
+  transition: color 0.3s ease;
+}
+
+nav a:hover, nav a.active {
+  color: var(--text-color);
+  border-bottom: 2px solid var(--text-color);
+}
+
+.component-container {
+  
+  padding: 0; /* Remove horizontal padding here */
+  flex-grow: 1; /* Allow container to grow and take available height */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+p {
+  font-size: 1.5em;
+  line-height: 1.8;
+  margin-bottom: 30px;
+  white-space: pre-wrap;
+  padding: 0 40px; /* Add padding to the text itself */
+}
+
+button {
+  background-color: transparent;
+  color: var(--text-border-color);
+  border: 2px solid var(--text-border-color);
+  border-radius: 50px;
+  padding: 15px 30px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 10px;
+}
+
+button:hover {
+  background-color: var(--text-border-color);
+  color: var(--bg-color);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+input {
+  background-color: transparent;
+  color: var(--text-border-color);
+  border: none;
+  border-bottom: 2px solid var(--text-border-color);
+  padding: 10px;
+  font-size: 1em;
+  text-align: center;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield; /* Firefox */
+}
+
+input:focus {
+  outline: none;
+  border-bottom-color: var(--text-border-color);
+}
+
+.read-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* Center content vertically */
+  align-items: center;
+  height: 100%; /* Take full height of parent */
+}
+
+.nav-arrow {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  background-color: transparent;
+  border: none;
+  color: var(--text-color);
+  font-size: 8em; /* Make icons bigger */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100px; /* Fixed width for the button area */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.nav-arrow:hover {
+  background-color: var(--hover-overlay-color); /* Subtle white overlay */
+  color: var(--text-color); /* Keep icon color same or slightly brighter */
+}
+
+.nav-arrow.left-arrow {
+  left: 0;
+}
+
+.nav-arrow.right-arrow {
+  right: 0;
+}
+
+.read-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+.read-controls span {
+  margin: 0 20px;
+}
