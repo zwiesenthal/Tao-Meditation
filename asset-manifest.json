@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Tao-Meditation/static/css/main.5c376acf.css",
-    "main.js": "/Tao-Meditation/static/js/main.f2b357e7.js",
+    "main.css": "/Tao-Meditation/static/css/main.6b7e14bf.css",
+    "main.js": "/Tao-Meditation/static/js/main.807b7bd0.js",
     "static/js/453.b2c65378.chunk.js": "/Tao-Meditation/static/js/453.b2c65378.chunk.js",
     "index.html": "/Tao-Meditation/index.html",
-    "main.5c376acf.css.map": "/Tao-Meditation/static/css/main.5c376acf.css.map",
-    "main.f2b357e7.js.map": "/Tao-Meditation/static/js/main.f2b357e7.js.map",
+    "main.6b7e14bf.css.map": "/Tao-Meditation/static/css/main.6b7e14bf.css.map",
+    "main.807b7bd0.js.map": "/Tao-Meditation/static/js/main.807b7bd0.js.map",
     "453.b2c65378.chunk.js.map": "/Tao-Meditation/static/js/453.b2c65378.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.5c376acf.css",
-    "static/js/main.f2b357e7.js"
+    "static/css/main.6b7e14bf.css",
+    "static/js/main.807b7bd0.js"
   ]
 }
