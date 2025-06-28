@@ -33,12 +33,12 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
     });
     const [timeLeft, setTimeLeft] = useState(startTime);
     const [pageNumber, setPageNumber] = useState(() => {
-        const syncedPage = getLocalStorageItem('meditationSyncPage');
+        const syncedPage = getLocalStorageItem('meditationPage');
         return syncedPage ? parseInt(syncedPage, 10) : 0;
     });
     const [isRandom, setIsRandom] = useState(() => {
         const savedIsRandom = getLocalStorageItem('meditationIsRandom');
-        const syncedPage = getLocalStorageItem('meditationSyncPage');
+        const syncedPage = getLocalStorageItem('meditationPage');
         // If a synced page exists, default to sequential, otherwise use saved preference or true
         return syncedPage ? false : (savedIsRandom === 'true' ? true : false);
     });
@@ -59,7 +59,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
             const textToSpeak = bodyText;
             const utterance = new SpeechSynthesisUtterance(textToSpeak);
             utterance.lang = 'en-US';
-            utterance.rate = 0.9; // Slightly slower for better comprehension
+            utterance.rate = 1; // Slightly slower for better comprehension
 
             utterance.onstart = () => setIsSpeaking(true);
             utterance.onend = () => setIsSpeaking(false);
@@ -154,7 +154,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
             setText(STATES.NOT_STARTED);
             setTimeLeft(startTime);
             if (!isRandom) {
-                // This will trigger the useEffect for bodyText
+                localStorage.setItem('meditationPage', (pageNumber+1).toLocaleString());
                 setPageNumber(prev => prev + 1);
             } else {
                 // Get a new random text
@@ -233,7 +233,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
                         const newRandomState = !isRandom;
                         setIsRandom(newRandomState);
                         if (!newRandomState) { // If switching to sequential
-                            const syncedPage = getLocalStorageItem('meditationSyncPage');
+                            const syncedPage = getLocalStorageItem('meditationPage');
                             const newPageNumber = syncedPage ? parseInt(syncedPage, 10) : 0;
                             setPageNumber(newPageNumber);
                         }
@@ -241,7 +241,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
                         {isRandom ? "Random" : "Sequential"}
                     </button>
                     <button onClick={() => {
-                        const syncedPage = getLocalStorageItem('taoPage');
+                        const syncedPage = getLocalStorageItem('readPage');
                         if (syncedPage) {
                             const newPageNumber = parseInt(syncedPage, 10);
                             setPageNumber(newPageNumber);

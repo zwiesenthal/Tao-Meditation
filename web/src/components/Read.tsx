@@ -5,13 +5,13 @@ import taoText from '../text/tao_text';
 
 const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSettingsComponent }) => {
     const [pageNumber, setPageNumber] = useState(() => {
-        const savedPage = localStorage.getItem('taoPage');
+        const savedPage = localStorage.getItem('readPage');
         return savedPage ? parseInt(savedPage, 10) : 0;
     });
     const [jumpToPage, setJumpToPage] = useState('');
 
     useEffect(() => {
-        localStorage.setItem('taoPage', pageNumber.toString());
+        localStorage.setItem('readPage', pageNumber.toString());
     }, [pageNumber]);
 
     const nextPage = () => {
@@ -37,7 +37,7 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
     };
 
     const syncMeditationPage = () => {
-        localStorage.setItem('meditationSyncPage', pageNumber.toString());
+        localStorage.setItem('meditationPage', pageNumber.toString());
     };
 
     const [isSpeaking, setIsSpeaking] = useState(false);
