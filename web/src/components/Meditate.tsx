@@ -112,7 +112,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
         if (!audio) return;
 
         // Set initial source
-        audio.src = `/assets/${fileName}`;
+        audio.src = `${process.env.PUBLIC_URL}/assets/${fileName}`;
 
         const updateTimer = () => {
             // Only update time if it's a valid number

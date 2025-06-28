@@ -151,6 +151,46 @@ input:focus {
   justify-content: center;
   align-items: center;
   z-index: 10;
+  transition: opacity 0.5s ease-in-out; /* Add transition for opacity */
+}
+
+.nav-arrow.fade-out {
+  opacity: 0;
+}
+
+@media (max-width: 768px) {
+  .nav-arrow {
+    color: transparent; /* Hide the arrow character */
+    width: 30%; /* Make the clickable area larger on mobile */
+  }
+
+  .read-container {
+    flex-direction: column; /* Stack items vertically */
+    justify-content: center; /* Center content vertically */
+    align-items: center; /* Center content horizontally */
+    width: 100%; /* Ensure it takes full width */
+  }
+
+  .read-content {
+    flex-grow: 1; /* Allow content to take available space */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center text on mobile */
+    width: 100%; /* Ensure content takes full width */
+    padding: 0 20px; /* Add padding to the content container */
+    box-sizing: border-box; /* Include padding in width calculation */
+  }
+
+  .read-container p {
+    padding: 0; /* Remove padding from p tag */
+    max-width: 600px; /* Set a max-width for readability */
+    width: 100%; /* Allow it to take full width up to max-width */
+    box-sizing: border-box; /* Include padding in width calculation */
+    margin: 0 auto; /* Center the paragraph horizontally */
+    text-align: center; /* Ensure text is centered */
+  }
 }
 
 .nav-arrow:hover {

@@ -9,9 +9,25 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
         return savedPage ? parseInt(savedPage, 10) : 0;
     });
     const [jumpToPage, setJumpToPage] = useState('');
+    const [showNavArrows, setShowNavArrows] = useState(true); // New state for arrow visibility
+    const fadeOutTimerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store the timer ID
+
+    // Function to check if it's a mobile screen
+    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
 
     useEffect(() => {
         localStorage.setItem('readPage', pageNumber.toString());
+        // When page changes, show arrows and reset fade-out timer
+        setShowNavArrows(true);
+        if (fadeOutTimerRef.current) {
+            clearTimeout(fadeOutTimerRef.current);
+        }
+        // Start new fade-out timer if on mobile
+        if (isMobile()) {
+            fadeOutTimerRef.current = setTimeout(() => {
+                setShowNavArrows(false);
+            }, 500); // 500 ms
+        }
     }, [pageNumber]);
 
     const nextPage = () => {
@@ -94,10 +110,12 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
 
 
     return (
-        <div className="read-container">
-            <button className="nav-arrow left-arrow" onClick={prevPage} disabled={pageNumber === 0}>&#8249;</button>
-            <p>{taoText[pageNumber]}</p>
-            <button className="nav-arrow right-arrow" onClick={nextPage} disabled={pageNumber === taoText.length - 1}>&#8250;</button>
+        <div className="read-container read-page-container">
+            <button className={`nav-arrow left-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={prevPage} disabled={pageNumber === 0}>&#8249;</button>
+            <div className="read-content">
+                <p>{taoText[pageNumber]}</p>
+            </div>
+            <button className={`nav-arrow right-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={nextPage} disabled={pageNumber === taoText.length - 1}>&#8250;</button>
             <div className="read-controls">
                 <span>
                     Page {pageNumber + 1} of {taoText.length}
@@ -107,13 +125,15 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
                     value={jumpToPage}
                     onChange={(e) => setJumpToPage(e.target.value)}
                     onKeyDown={handleJumpToPage}
-                    placeholder="Jump to page"
+                    placeholder="Page"
+                    style={{width: 68}}
                 />
                 <button onClick={isSpeaking ? stopReading : readAloud}>
                     {isSpeaking ? 'Stop Reading' : 'Read Aloud'}
                 </button>
-                {colorSettingsComponent}
             </div>
+            {colorSettingsComponent}
+
         </div>
     );
 };
