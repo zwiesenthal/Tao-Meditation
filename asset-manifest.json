@@ -1,15 +1,15 @@
 {
   "files": {
-    "main.css": "/Tao-Meditation/static/css/main.6b7e14bf.css",
-    "main.js": "/Tao-Meditation/static/js/main.807b7bd0.js",
-    "static/js/453.b2c65378.chunk.js": "/Tao-Meditation/static/js/453.b2c65378.chunk.js",
-    "index.html": "/Tao-Meditation/index.html",
-    "main.6b7e14bf.css.map": "/Tao-Meditation/static/css/main.6b7e14bf.css.map",
-    "main.807b7bd0.js.map": "/Tao-Meditation/static/js/main.807b7bd0.js.map",
-    "453.b2c65378.chunk.js.map": "/Tao-Meditation/static/js/453.b2c65378.chunk.js.map"
+    "main.css": "/static/css/main.c4908eae.css",
+    "main.js": "/static/js/main.29b3c607.js",
+    "static/js/453.b2c65378.chunk.js": "/static/js/453.b2c65378.chunk.js",
+    "index.html": "/index.html",
+    "main.c4908eae.css.map": "/static/css/main.c4908eae.css.map",
+    "main.29b3c607.js.map": "/static/js/main.29b3c607.js.map",
+    "453.b2c65378.chunk.js.map": "/static/js/453.b2c65378.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.6b7e14bf.css",
-    "static/js/main.807b7bd0.js"
+    "static/css/main.c4908eae.css",
+    "static/js/main.29b3c607.js"
   ]
 }
