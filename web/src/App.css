@@ -136,10 +136,15 @@ input:focus {
   height: 100%; /* Take full height of parent */
 }
 
+.read-main-content {
+  display: flex;
+  align-items: center; /* Vertically align items */
+  justify-content: center;
+  width: 100%;
+  flex-grow: 1;
+}
+
 .nav-arrow {
-  position: absolute;
-  top: 0;
-  bottom: 0;
   background-color: transparent;
   border: none;
   color: var(--text-color);
@@ -152,6 +157,8 @@ input:focus {
   align-items: center;
   z-index: 10;
   transition: opacity 0.5s ease-in-out; /* Add transition for opacity */
+  height: fit-content; /* Make height fit content */
+  align-self: center; /* Align to the center of the flex container */
 }
 
 .nav-arrow.fade-out {
@@ -162,6 +169,8 @@ input:focus {
   .nav-arrow {
     color: transparent; /* Hide the arrow character */
     width: 30%; /* Make the clickable area larger on mobile */
+    top: unset; /* Remove top positioning */
+    bottom: unset; /* Remove bottom positioning */
   }
 
   .read-container {

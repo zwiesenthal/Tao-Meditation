@@ -111,11 +111,13 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
 
     return (
         <div className="read-container read-page-container">
-            <button className={`nav-arrow left-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={prevPage} disabled={pageNumber === 0}>&#8249;</button>
-            <div className="read-content">
-                <p>{taoText[pageNumber]}</p>
+            <div className="read-main-content">
+                <button className={`nav-arrow left-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={prevPage} disabled={pageNumber === 0}>&#8249;</button>
+                <div className="read-content">
+                    <p>{taoText[pageNumber]}</p>
+                </div>
+                <button className={`nav-arrow right-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={nextPage} disabled={pageNumber === taoText.length - 1}>&#8250;</button>
             </div>
-            <button className={`nav-arrow right-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={nextPage} disabled={pageNumber === taoText.length - 1}>&#8250;</button>
             <div className="read-controls">
                 <span>
                     Page {pageNumber + 1} of {taoText.length}
