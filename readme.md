@@ -2,6 +2,8 @@
 Tao Te Ching Meditation App
 Names: The Daily Tao (Daily Dao)
 
+> **Note:** The web version (in `web/`) is entirely vibe coded.
+
 ## Main page:
     Minutes choice 3 - 60 or 0, just listen to it, or a button to check in
     Play / Pause Button

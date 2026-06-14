@@ -200,6 +200,15 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
         }
     }, [startTime, text]);
 
+    const toggleSettings = () => setIsSettingsHidden(prev => !prev);
+
+    // When the settings panel opens, scroll down so it's fully in view.
+    useEffect(() => {
+        if (!isSettingsHidden) {
+            window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
+        }
+    }, [isSettingsHidden]);
+
 
     return (
         <div>
@@ -209,7 +218,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
                 {/* Timer display */}
                 <span style={{fontSize: '1.5em', margin: '0 20px'}}>{toMins(timeLeft)}:{toSeconds(timeLeft)}</span>
             </div>
-            <button onClick={() => setIsSettingsHidden(!isSettingsHidden)}>
+            <button onClick={toggleSettings}>
                 {isSettingsHidden ? 'Settings' : 'Hide Settings'}
             </button>
             <button onClick={isSpeaking ? stopReading : readAloud}>
