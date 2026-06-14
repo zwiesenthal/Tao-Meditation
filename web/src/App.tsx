@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect, useCallback } from 'react';
 import { HashRouter as Router, Routes, Route, NavLink } from 'react-router-dom';
 import Meditate from './components/Meditate';
@@ -17,17 +16,15 @@ const App: React.FC = () => {
   const [textColor, setTextColor] = useState(() => {
     return getLocalStorageItem('textColor') || DEFAULT_TEXT;
   });
-  const [hoverColor, setHoverColor] = useState('rgba(255, 255, 255, 0.05)'); // Default hover color
+  const [hoverColor, setHoverColor] = useState('rgba(255, 255, 255, 0.05)');
 
   const handleColorChange = useCallback((bgColor: string, txtColor: string, hvrColor: string) => {
-    console.log("App.tsx handleColorChange - Received colors:", { bgColor, txtColor, hvrColor });
     setBackgroundColor(bgColor);
     setTextColor(txtColor);
     setHoverColor(hvrColor);
   }, []);
 
   useEffect(() => {
-    console.log("App.tsx useEffect - Setting CSS variables:", { backgroundColor, textColor, hoverColor });
     document.documentElement.style.setProperty('--bg-color', backgroundColor);
     document.documentElement.style.setProperty('--text-color', textColor);
     document.documentElement.style.setProperty('--text-border-color', textColor);

@@ -1,4 +1,3 @@
-
 :root {
   --bg-color: #121212;
   --text-color: #e0e0e0;
@@ -58,8 +57,7 @@ nav a:hover, nav a.active {
 }
 
 .component-container {
-  
-  padding: 0; /* Remove horizontal padding here */
+  padding: 0;
   flex-grow: 1; /* Allow container to grow and take available height */
   display: flex;
   flex-direction: column;
@@ -138,27 +136,50 @@ input:focus {
 
 .read-main-content {
   display: flex;
-  align-items: center; /* Vertically align items */
+  align-items: center;
   justify-content: center;
   width: 100%;
   flex-grow: 1;
+  /* Keep the text clear of the wall-mounted arrows. */
+  padding: 0 120px;
+  box-sizing: border-box;
 }
 
+/*
+ * Nav arrows are pinned to the viewport edges (the far-left and far-right
+ * "walls") with position: fixed so they stay put regardless of content width.
+ */
 .nav-arrow {
-  background-color: transparent;
-  border: none;
-  color: var(--text-color);
-  font-size: 8em; /* Make icons bigger */
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-  width: 100px; /* Fixed width for the button area */
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
   display: flex;
   justify-content: center;
   align-items: center;
+  height: fit-content;
+  width: 100px;
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  margin: 0;
+  color: var(--text-color);
+  font-size: 8em;
+  cursor: pointer;
   z-index: 10;
-  transition: opacity 0.5s ease-in-out; /* Add transition for opacity */
-  height: fit-content; /* Make height fit content */
-  align-self: center; /* Align to the center of the flex container */
+  transition: opacity 0.5s ease-in-out, background-color 0.3s ease;
+}
+
+.nav-arrow.left-arrow {
+  left: 0;
+}
+
+.nav-arrow.right-arrow {
+  right: 0;
+}
+
+.nav-arrow:hover:not(:disabled) {
+  background-color: var(--hover-overlay-color);
+  color: var(--text-color);
 }
 
 .nav-arrow.fade-out {
@@ -166,11 +187,18 @@ input:focus {
 }
 
 @media (max-width: 768px) {
+  .read-main-content {
+    padding: 0;
+  }
+
   .nav-arrow {
-    color: transparent; /* Hide the arrow character */
-    width: 30%; /* Make the clickable area larger on mobile */
-    top: unset; /* Remove top positioning */
-    bottom: unset; /* Remove bottom positioning */
+    /* Full-height, transparent tap zones on the left/right thirds. */
+    top: 0;
+    bottom: 0;
+    height: auto;
+    transform: none;
+    width: 30%;
+    color: transparent;
   }
 
   .read-container {
@@ -200,19 +228,6 @@ input:focus {
     margin: 0 auto; /* Center the paragraph horizontally */
     text-align: center; /* Ensure text is centered */
   }
-}
-
-.nav-arrow:hover {
-  background-color: var(--hover-overlay-color); /* Subtle white overlay */
-  color: var(--text-color); /* Keep icon color same or slightly brighter */
-}
-
-.nav-arrow.left-arrow {
-  left: 0;
-}
-
-.nav-arrow.right-arrow {
-  right: 0;
 }
 
 .read-controls {

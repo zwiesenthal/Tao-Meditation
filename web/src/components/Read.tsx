@@ -1,7 +1,8 @@
-
-
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import taoText from '../text/tao_text';
+
+const MOBILE_QUERY = '(max-width: 768px)';
+const MOBILE_ARROW_FADE_MS = 500;
 
 const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSettingsComponent }) => {
     const [pageNumber, setPageNumber] = useState(() => {
@@ -9,89 +10,78 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
         return savedPage ? parseInt(savedPage, 10) : 0;
     });
     const [jumpToPage, setJumpToPage] = useState('');
-    const [showNavArrows, setShowNavArrows] = useState(true); // New state for arrow visibility
-    const fadeOutTimerRef = useRef<NodeJS.Timeout | null>(null); // Ref to store the timer ID
+    const [showNavArrows, setShowNavArrows] = useState(true);
+    const [isSpeaking, setIsSpeaking] = useState(false);
 
-    // Function to check if it's a mobile screen
-    const isMobile = () => window.matchMedia('(max-width: 768px)').matches;
+    const fadeOutTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+    const isMobile = () => window.matchMedia(MOBILE_QUERY).matches;
+
+    // Functional updates keep these stable so handlers/effects never read a stale page.
+    const nextPage = useCallback(() => {
+        setPageNumber(prev => (prev < taoText.length - 1 ? prev + 1 : prev));
+    }, []);
+
+    const prevPage = useCallback(() => {
+        setPageNumber(prev => (prev > 0 ? prev - 1 : prev));
+    }, []);
+
+    // Persist the current page and (on mobile) fade the arrows out after a moment.
     useEffect(() => {
         localStorage.setItem('readPage', pageNumber.toString());
-        // When page changes, show arrows and reset fade-out timer
+
         setShowNavArrows(true);
         if (fadeOutTimerRef.current) {
             clearTimeout(fadeOutTimerRef.current);
         }
-        // Start new fade-out timer if on mobile
         if (isMobile()) {
-            fadeOutTimerRef.current = setTimeout(() => {
-                setShowNavArrows(false);
-            }, 500); // 500 ms
+            fadeOutTimerRef.current = setTimeout(() => setShowNavArrows(false), MOBILE_ARROW_FADE_MS);
         }
+
+        return () => {
+            if (fadeOutTimerRef.current) {
+                clearTimeout(fadeOutTimerRef.current);
+            }
+        };
     }, [pageNumber]);
 
-    const nextPage = () => {
-        if (pageNumber < taoText.length - 1) {
-            setPageNumber(pageNumber + 1);
-        }
-    };
-
-    const prevPage = () => {
-        if (pageNumber > 0) {
-            setPageNumber(pageNumber - 1);
-        }
-    };
-
     const handleJumpToPage = (e: React.KeyboardEvent<HTMLInputElement>) => {
-        if (e.key === 'Enter') {
-            const page = parseInt(jumpToPage, 10);
-            if (!isNaN(page) && page >= 1 && page <= taoText.length) {
-                setPageNumber(page - 1);
-                setJumpToPage('');
-            }
+        if (e.key !== 'Enter') return;
+        const page = parseInt(jumpToPage, 10);
+        if (!isNaN(page) && page >= 1 && page <= taoText.length) {
+            setPageNumber(page - 1);
+            setJumpToPage('');
         }
     };
-
-    const syncMeditationPage = () => {
-        localStorage.setItem('meditationPage', pageNumber.toString());
-    };
-
-    const [isSpeaking, setIsSpeaking] = useState(false);
-    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
     const readAloud = () => {
-        if ('speechSynthesis' in window) {
-            const textToSpeak = taoText[pageNumber];
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = 'en-US';
-            utterance.rate = 0.9; // Slightly slower for better comprehension
-
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            utterance.onerror = () => setIsSpeaking(false);
-
-            speechSynthesis.cancel(); // Stop any ongoing speech
-            speechSynthesis.speak(utterance);
-            utteranceRef.current = utterance;
-        } else {
-            alert("Text-to-speech not supported in this browser.");
+        if (!('speechSynthesis' in window)) {
+            alert('Text-to-speech is not supported in this browser.');
+            return;
         }
+
+        const utterance = new SpeechSynthesisUtterance(taoText[pageNumber]);
+        utterance.lang = 'en-US';
+        utterance.rate = 0.9; // Slightly slower for better comprehension.
+        utterance.onstart = () => setIsSpeaking(true);
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+
+        speechSynthesis.cancel(); // Stop any ongoing speech.
+        speechSynthesis.speak(utterance);
     };
 
-    const stopReading = () => {
+    const stopReading = useCallback(() => {
         if ('speechSynthesis' in window) {
             speechSynthesis.cancel();
             setIsSpeaking(false);
         }
-    };
+    }, []);
 
-    useEffect(() => {
-        // Stop reading if page changes or component unmounts
-        return () => {
-            stopReading();
-        };
-    }, [pageNumber]); // Dependency on pageNumber to stop on page change
+    // Stop any narration when the page changes or the component unmounts.
+    useEffect(() => stopReading, [pageNumber, stopReading]);
 
+    // Arrow keys flip pages.
     useEffect(() => {
         const handleKeyDown = (e: KeyboardEvent) => {
             if (e.key === 'ArrowRight') {
@@ -102,21 +92,28 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
         };
 
         window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [nextPage, prevPage]);
 
-        return () => {
-            window.removeEventListener('keydown', handleKeyDown);
-        };
-    }, [pageNumber]);
-
+    const arrowClass = (side: 'left' | 'right') =>
+        `nav-arrow ${side}-arrow${showNavArrows ? '' : ' fade-out'}`;
 
     return (
         <div className="read-container read-page-container">
             <div className="read-main-content">
-                <button className={`nav-arrow left-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={prevPage} disabled={pageNumber === 0}>&#8249;</button>
+                <button className={arrowClass('left')} onClick={prevPage} disabled={pageNumber === 0}>
+                    &#8249;
+                </button>
                 <div className="read-content">
                     <p>{taoText[pageNumber]}</p>
                 </div>
-                <button className={`nav-arrow right-arrow ${showNavArrows ? '' : 'fade-out'}`} onClick={nextPage} disabled={pageNumber === taoText.length - 1}>&#8250;</button>
+                <button
+                    className={arrowClass('right')}
+                    onClick={nextPage}
+                    disabled={pageNumber === taoText.length - 1}
+                >
+                    &#8250;
+                </button>
             </div>
             <div className="read-controls">
                 <span>
@@ -128,17 +125,15 @@ const Read: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ colorSett
                     onChange={(e) => setJumpToPage(e.target.value)}
                     onKeyDown={handleJumpToPage}
                     placeholder="Page"
-                    style={{width: 68}}
+                    style={{ width: 68 }}
                 />
                 <button onClick={isSpeaking ? stopReading : readAloud}>
                     {isSpeaking ? 'Stop Reading' : 'Read Aloud'}
                 </button>
             </div>
             {colorSettingsComponent}
-
         </div>
     );
 };
 
 export default Read;
-

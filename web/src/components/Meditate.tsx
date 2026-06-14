@@ -1,5 +1,3 @@
-
-
 import React, { useState, useEffect, useRef } from 'react';
 import taoText from '../text/tao_text';
 import { getLocalStorageItem, setLocalStorageItem } from '../utils/localStorage';
@@ -43,7 +41,7 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
         return syncedPage ? false : (savedIsRandom === 'true' ? true : false);
     });
     const [bodyText, setBodyText] = useState(taoText[pageNumber]);
-    const [audioStyle, setAudioStyle] = useState("silent"); // SILENT or GUIDED
+    const [audioStyle] = useState("silent"); // "silent" or "guided" (guided not yet available)
     const [fileName, setFileName] = useState(() => {
         const initialMins = startTime / 60;
         return FileNames["silent"][initialMins.toString()] || "silent_10.mp3";
@@ -52,25 +50,22 @@ const Meditate: React.FC<{ colorSettingsComponent: React.ReactNode }> = ({ color
 
     const audioRef = useRef<HTMLAudioElement>(null);
     const [isSpeaking, setIsSpeaking] = useState(false);
-    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
     const readAloud = () => {
-        if ('speechSynthesis' in window) {
-            const textToSpeak = bodyText;
-            const utterance = new SpeechSynthesisUtterance(textToSpeak);
-            utterance.lang = 'en-US';
-            utterance.rate = 1; // Slightly slower for better comprehension
-
-            utterance.onstart = () => setIsSpeaking(true);
-            utterance.onend = () => setIsSpeaking(false);
-            utterance.onerror = () => setIsSpeaking(false);
-
-            speechSynthesis.cancel(); // Stop any ongoing speech
-            speechSynthesis.speak(utterance);
-            utteranceRef.current = utterance;
-        } else {
-            alert("Text-to-speech not supported in this browser.");
+        if (!('speechSynthesis' in window)) {
+            alert('Text-to-speech is not supported in this browser.');
+            return;
         }
+
+        const utterance = new SpeechSynthesisUtterance(bodyText);
+        utterance.lang = 'en-US';
+        utterance.rate = 1;
+        utterance.onstart = () => setIsSpeaking(true);
+        utterance.onend = () => setIsSpeaking(false);
+        utterance.onerror = () => setIsSpeaking(false);
+
+        speechSynthesis.cancel(); // Stop any ongoing speech.
+        speechSynthesis.speak(utterance);
     };
 
     const stopReading = () => {
